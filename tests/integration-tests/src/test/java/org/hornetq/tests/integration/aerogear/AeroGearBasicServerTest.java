@@ -40,6 +40,9 @@ public class AeroGearBasicServerTest extends ServiceTestBase
       Configuration configuration = createDefaultConfig();
       HashMap<String, Object> params = new HashMap<String, Object>();
       params.put(AeroGearConstants.QUEUE_NAME, "testQueue");
+      params.put(AeroGearConstants.ENDPOINT_NAME, "http://aerogear-mtaylor.rhcloud.com");
+      params.put(AeroGearConstants.APPLICATION_ID_NAME, "9d646a12-e601-4452-9e05-efb0fccdfd08") ;
+      params.put(AeroGearConstants.APPLICATION_MASTER_SECRET_NAME, "ed75f17e-cf3c-4c9b-a503-865d91d60d40");
       configuration.getConnectorServiceConfigurations().add(
             new ConnectorServiceConfiguration(AeroGearConnectorServiceFactory.class.getName(), params, "TestAeroGearService"));
 
@@ -71,8 +74,22 @@ public class AeroGearBasicServerTest extends ServiceTestBase
       ClientSessionFactory sf = createSessionFactory(locator);
       ClientSession session = sf.createSession(false, true, true);
       ClientProducer producer = session.createProducer("testQueue");
-      final CountDownLatch latch = new CountDownLatch(1);
-      producer.send(createMessage(session, 0, true), new SendAcknowledgementHandler()
+      final CountDownLatch latch = new CountDownLatch(2);
+      ClientMessage m = session.createMessage(true);
+      m.getBodyBuffer().writeString("hello from HornetQ!");
+
+      producer.send(m, new SendAcknowledgementHandler()
+      {
+         @Override
+         public void sendAcknowledged(Message message)
+         {
+            latch.countDown();
+         }
+      });
+      m = session.createMessage(true);
+      m.getBodyBuffer().writeString("another hello from HornetQ!");
+
+      producer.send(m, new SendAcknowledgementHandler()
       {
          @Override
          public void sendAcknowledged(Message message)
