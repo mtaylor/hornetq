@@ -33,6 +33,7 @@ import org.hornetq.jms.client.HornetQDestination;
 import org.hornetq.jms.client.HornetQMessage;
 import org.hornetq.ra.HornetQRALogger;
 import org.hornetq.utils.FutureLatch;
+import org.hornetq.ra.HornetQXAResourceWrapper;
 
 /**
  * The message handler
@@ -40,6 +41,7 @@ import org.hornetq.utils.FutureLatch;
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @author <a href="mailto:jesper.pedersen@jboss.org">Jesper Pedersen</a>
  * @author <a href="mailto:andy.taylor@jboss.org">Andy Taylor</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public class HornetQMessageHandler implements MessageHandler
 {
@@ -189,7 +191,8 @@ public class HornetQMessageHandler implements MessageHandler
       transacted = activation.isDeliveryTransacted();
       if (activation.isDeliveryTransacted() && !activation.getActivationSpec().isUseLocalTx())
       {
-         endpoint = endpointFactory.createEndpoint(session);
+         XAResource xaResource = new HornetQXAResourceWrapper(session, "", "", spec.getRAJndiName());
+         endpoint = endpointFactory.createEndpoint(xaResource);
          useXA = true;
       }
       else

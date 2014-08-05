@@ -56,6 +56,7 @@ import org.jgroups.JChannel;
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @author <a href="jesper.pedersen@jboss.org">Jesper Pedersen</a>
  * @author <a href="mailto:andy.taylor@jboss.org">Andy Taylor</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public class HornetQResourceAdapter implements ResourceAdapter, Serializable
 {
@@ -110,6 +111,8 @@ public class HornetQResourceAdapter implements ResourceAdapter, Serializable
    private boolean useAutoRecovery = true;
 
    private final List<HornetQRAManagedConnectionFactory> managedConnectionFactories = new ArrayList<HornetQRAManagedConnectionFactory>();
+
+   private String jndiName;
 
    /**
     * Constructor
@@ -369,6 +372,16 @@ public class HornetQResourceAdapter implements ResourceAdapter, Serializable
    public void setHA(final Boolean ha)
    {
       this.raProperties.setHA(ha);
+   }
+
+   public String getJndiName()
+   {
+      return jndiName;
+   }
+
+   public void setJndiName(String jndiName)
+   {
+      this.jndiName = jndiName;
    }
 
    /**

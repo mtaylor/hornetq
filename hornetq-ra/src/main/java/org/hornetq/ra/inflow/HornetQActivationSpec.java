@@ -27,12 +27,13 @@ import org.hornetq.ra.HornetQResourceAdapter;
 
 /**
  * The activation spec
- * These properties are set on the MDB ActivactionProperties
+ * These properties are set on the MDB ActivationProperties
  *
  * @author <a href="adrian@jboss.com">Adrian Brock</a>
  * @author <a href="jesper.pedersen@jboss.org">Jesper Pedersen</a>
  * @author <a href="mailto:andy.taylor@jboss.org">Andy Taylor</a>
  * @author <a href="mailto:clebert.suconic@jboss.org">Clebert Suconic</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public class HornetQActivationSpec extends ConnectionFactoryProperties implements ActivationSpec, Serializable
 {
@@ -203,6 +204,16 @@ public class HornetQActivationSpec extends ConnectionFactoryProperties implement
    {
       this.jndiParams = jndiParams;
       parsedJndiParams = HornetQRaUtils.parseHashtableConfig(jndiParams);
+   }
+
+   /**
+    * Returns the global jndi name as set on the resource adapater associated with this Activation Spec.
+    *
+    * @return jndi name of the Resource Adapter.
+    */
+   public String getRAJndiName()
+   {
+      return ra.getJndiName();
    }
 
    public Hashtable<?, ?> getParsedJndiParams()
