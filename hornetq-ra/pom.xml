@@ -52,6 +52,12 @@
          <artifactId>jboss-jca-api</artifactId>
          <scope>provided</scope>
       </dependency>
+      <dependency>
+         <groupId>org.jboss.ironjacamar</groupId>
+         <artifactId>ironjacamar-core-spi</artifactId>
+         <version>1.0.0.Beta5</version>
+      </dependency>
+
    </dependencies>
 
 </project>

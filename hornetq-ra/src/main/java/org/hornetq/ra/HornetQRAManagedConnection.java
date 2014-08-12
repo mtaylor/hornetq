@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.hornetq.core.client.impl.ClientSessionInternal;
 import org.hornetq.jms.client.HornetQConnection;
 import org.hornetq.jms.client.HornetQConnectionFactory;
 import org.hornetq.jms.client.HornetQXAConnection;
@@ -51,6 +52,7 @@ import org.hornetq.jms.client.HornetQXAConnection;
  *
  * @author <a href="mailto:adrian@jboss.com">Adrian Brock</a>
  * @author <a href="mailto:jesper.pedersen@jboss.org">Jesper Pedersen</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public final class HornetQRAManagedConnection implements ManagedConnection, ExceptionListener
 {
@@ -522,12 +524,22 @@ public final class HornetQRAManagedConnection implements ManagedConnection, Exce
       }
 
       //
-      // Spec says a mc must allways return the same XA resource,
+      // Spec says a mc must always return the same XA resource,
       // so we cache it.
       //
       if (xaResource == null)
       {
-         xaResource = new HornetQRAXAResource(this, xaSession.getXAResource());
+         try
+         {
+            XAResource xaResourceUnwrapped = new HornetQRAXAResource(this, xaSession.getXAResource());
+            xaResource = new HornetQXAResourceWrapper(xaResourceUnwrapped,
+                                                      ra.getJndiName(),
+                                                      ((HornetQRASession) xaSession).getNodeId());
+         }
+         catch(JMSException e)
+         {
+            throw new ResourceException(e);
+         }
       }
 
       if (HornetQRAManagedConnection.trace)

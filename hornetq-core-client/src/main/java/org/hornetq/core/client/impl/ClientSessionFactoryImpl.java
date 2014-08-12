@@ -69,6 +69,7 @@ import org.hornetq.utils.UUIDGenerator;
 /**
  * @author Tim Fox
  * @author Clebert Suconic
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 
 public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, ConnectionLifeCycleListener
@@ -158,7 +159,6 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
    private final ConfirmationWindowWarning confirmationWindowWarning;
 
    private String liveNodeID;
-
 
    public ClientSessionFactoryImpl(final ServerLocatorInternal serverLocator,
                                    final TransportConfiguration connectorConfig,
@@ -1566,6 +1566,11 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
       }
    }
 
+   @Override
+   public String getLiveNodeId()
+   {
+      return liveNodeID;
+   }
 
    class SessionFactoryProtocolHandler implements ProtocolResponseHandler
    {
@@ -1607,5 +1612,4 @@ public class ClientSessionFactoryImpl implements ClientSessionFactoryInternal, C
          serverLocator.notifyNodeDown(eventTime, nodeID);
       }
    }
-
 }
