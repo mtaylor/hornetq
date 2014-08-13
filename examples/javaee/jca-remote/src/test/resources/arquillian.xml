@@ -16,8 +16,8 @@ This feature can also be controlled using the system property arquillian.deploym
    <group qualifier="clustering-all">
       <container qualifier="node-0" mode="manual" default="true" managed="false">
          <configuration>
-            <property name="jbossHome">${basedir}/target/jbossas-node0</property>
-            <property name="javaVmArguments">-Djboss.node.name=node-0</property>
+            <property name="jbossHome">/home/mtaylor/dev/hornetq/examples/javaee/jca-remote/target/jbossas-node0</property>
+            <property name="javaVmArguments">-Djboss.node.name=node-0 -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=8787</property>
             <property name="serverConfig">standalone-example.xml</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="managementAddress">${node0:127.0.0.1}</property>
@@ -25,8 +25,8 @@ This feature can also be controlled using the system property arquillian.deploym
       </container>
       <container qualifier="node-1" mode="manual" managed="false">
          <configuration>
-            <property name="jbossHome">${basedir}/target/jbossas-node1</property>
-            <property name="javaVmArguments">-Djboss.node.name=node-1 -Djboss.socket.binding.port-offset=100</property>
+            <property name="jbossHome">/home/mtaylor/dev/hornetq/examples/javaee/jca-remote/target/jbossas-node1</property>
+            <property name="javaVmArguments">-Djboss.node.name=node-1 -Djboss.socket.binding.port-offset=100 -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005</property>
             <property name="serverConfig">standalone-example2.xml</property>
             <property name="allowConnectingToRunningServer">true</property>
             <property name="managementAddress">${node0:127.0.0.1}</property>
