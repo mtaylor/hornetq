@@ -402,4 +402,9 @@ public class TransportConfiguration implements Serializable
    {
       return str.replace('.', '-');
    }
+
+   public void setParams(Map<String, Object> params)
+   {
+      this.params = params;
+   }
 }

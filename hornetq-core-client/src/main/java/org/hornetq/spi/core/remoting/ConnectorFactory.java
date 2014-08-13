@@ -60,4 +60,9 @@ public interface ConnectorFactory
     * @return whether or not connectors from this factory are reliable
     */
    boolean isReliable();
+
+   /**
+    * Set default connector configuration used for this Connector Factory
+    */
+   Map<String, Object> getDefaultConfiguration();
 }

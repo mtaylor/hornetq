@@ -12,6 +12,8 @@
  */
 package org.hornetq.core.remoting.impl.netty;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
@@ -29,6 +31,13 @@ import org.hornetq.spi.core.remoting.ConnectorFactory;
  */
 public class NettyConnectorFactory implements ConnectorFactory
 {
+   private static Map<String, Object> defaultConfiguration;
+
+   static
+   {
+      defaultConfiguration = new HashMap<String , Object>();
+      // TODO Add netty defaults here
+   }
    public Connector createConnector(final Map<String, Object> configuration,
                                     final BufferHandler handler,
                                     final ConnectionLifeCycleListener listener,
@@ -48,5 +57,11 @@ public class NettyConnectorFactory implements ConnectorFactory
    public boolean isReliable()
    {
       return false;
+   }
+
+   @Override
+   public Map<String, Object> getDefaultConfiguration()
+   {
+      return Collections.unmodifiableMap(defaultConfiguration);
    }
 }
