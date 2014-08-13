@@ -501,4 +501,13 @@ public class SessionTest extends ServiceTestBase
       clientSession.close();
       sendSession.close();
    }
+
+   @Test
+   public void testGetNodeId() throws Exception
+   {
+      cf = createSessionFactory(locator);
+      ClientSession clientSession = addClientSession(cf.createSession(false, true, true));
+      String nodeId = ((ClientSessionInternal) clientSession).getNodeId();
+      assertNotNull(nodeId);
+   }
 }

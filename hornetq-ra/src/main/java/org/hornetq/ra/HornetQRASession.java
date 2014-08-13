@@ -50,7 +50,6 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.hornetq.core.client.impl.ClientSessionFactoryInternal;
-import org.hornetq.core.client.impl.ClientSessionInternal;
 import org.hornetq.jms.client.HornetQSession;
 
 

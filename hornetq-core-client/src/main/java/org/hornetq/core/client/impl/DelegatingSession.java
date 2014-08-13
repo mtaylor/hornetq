@@ -642,4 +642,10 @@ public class DelegatingSession implements ClientSessionInternal
    {
       session.scheduleConfirmation(handler, msg);
    }
+
+   @Override
+   public String getNodeId()
+   {
+      return session.getNodeId();
+   }
 }

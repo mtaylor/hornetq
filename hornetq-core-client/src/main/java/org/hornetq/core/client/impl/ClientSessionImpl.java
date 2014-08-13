@@ -721,6 +721,12 @@ public final class ClientSessionImpl implements ClientSessionInternal, FailureLi
       return inClose;
    }
 
+   @Override
+   public String getNodeId()
+   {
+      return sessionFactory.getLiveNodeId();
+   }
+
    // ClientSessionInternal implementation
    // ------------------------------------------------------------
 
