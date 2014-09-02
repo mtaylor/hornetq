@@ -12,8 +12,10 @@
  */
 package org.hornetq.core.server.impl;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -36,6 +38,7 @@ import org.hornetq.utils.ConfigurationHelper;
  * and tweeted to some Twitter account).
  *
  * @author <a href="mailto:andy.taylor@jboss.org">Andy Taylor</a> Created Jun 29, 2010
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public final class ConnectorsService implements HornetQComponent
 {
@@ -68,7 +71,7 @@ public final class ConnectorsService implements HornetQComponent
 
       for (ConnectorServiceConfiguration info : configurationList)
       {
-         ConnectorServiceFactory factory = (ConnectorServiceFactory)ClassloadingUtil.newInstanceFromClassLoader(info.getFactoryClassName());
+         ConnectorServiceFactory factory = info.getConnectorServiceFactory();
 
          if (info.getParams() != null)
          {

@@ -27,6 +27,7 @@ import java.util.Set;
 import org.hornetq.api.config.HornetQDefaultConfiguration;
 import org.hornetq.api.core.BroadcastGroupConfiguration;
 import org.hornetq.api.core.DiscoveryGroupConfiguration;
+import org.hornetq.api.core.Interceptor;
 import org.hornetq.api.core.SimpleString;
 import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.core.config.BackupStrategy;
@@ -215,6 +216,10 @@ public class ConfigurationImpl implements Configuration
    private long journalLockAcquisitionTimeout = HornetQDefaultConfiguration.getDefaultJournalLockAcquisitionTimeout();
 
    private HAPolicy haPolicy = new HAPolicy();
+
+   private transient List<Interceptor> incomingInterceptors;
+
+   private transient List<Interceptor> outgoingInterceptors;
 
    // Public -------------------------------------------------------------------------
 
@@ -1537,5 +1542,29 @@ public class ConfigurationImpl implements Configuration
    public void setHAPolicy(HAPolicy haPolicy)
    {
       this.haPolicy = haPolicy;
+   }
+
+   @Override
+   public List<Interceptor> getIncomingInterceptors()
+   {
+      return incomingInterceptors;
+   }
+
+   @Override
+   public void setIncomingInterceptors(List<Interceptor> incomingInterceptors)
+   {
+      this.incomingInterceptors = incomingInterceptors;
+   }
+
+   @Override
+   public List<Interceptor> getOutgoingInterceptors()
+   {
+      return outgoingInterceptors;
+   }
+
+   @Override
+   public void setOutgoingInterceptors(List<Interceptor> outgoingInterceptors)
+   {
+      this.outgoingInterceptors = outgoingInterceptors;
    }
 }

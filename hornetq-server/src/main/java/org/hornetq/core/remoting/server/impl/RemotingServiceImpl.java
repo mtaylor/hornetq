@@ -68,6 +68,7 @@ import org.hornetq.utils.HornetQThreadFactory;
  * @author <a href="mailto:jmesnil@redhat.com">Jeff Mesnil</a>
  * @author <a href="mailto:ataylor@redhat.com">Andy Taylor</a>
  * @author <a href="mailto:tim.fox@jboss.com">Tim Fox</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public class RemotingServiceImpl implements RemotingService, ConnectionLifeCycleListener
 {
@@ -126,29 +127,8 @@ public class RemotingServiceImpl implements RemotingService, ConnectionLifeCycle
 
       this.clusterManager = clusterManager;
 
-      for (String interceptorClass : config.getIncomingInterceptorClassNames())
-      {
-         try
-         {
-            incomingInterceptors.add((Interceptor) safeInitNewInstance(interceptorClass));
-         }
-         catch (Exception e)
-         {
-            HornetQServerLogger.LOGGER.errorCreatingRemotingInterceptor(e, interceptorClass);
-         }
-      }
+      setInterceptors(config);
 
-      for (String interceptorClass : config.getOutgoingInterceptorClassNames())
-      {
-         try
-         {
-            outgoingInterceptors.add((Interceptor) safeInitNewInstance(interceptorClass));
-         }
-         catch (Exception e)
-         {
-            HornetQServerLogger.LOGGER.errorCreatingRemotingInterceptor(e, interceptorClass);
-         }
-      }
       this.managementService = managementService;
 
       this.scheduledThreadPool = scheduledThreadPool;
@@ -187,6 +167,50 @@ public class RemotingServiceImpl implements RemotingService, ConnectionLifeCycle
             {
                HornetQServerLogger.LOGGER.addingProtocolSupport(protocol);
                protocolMap.put(protocol, protocolManagerFactory.createProtocolManager(server, incomingInterceptors, outgoingInterceptors));
+            }
+         }
+      }
+   }
+
+   /**
+    * Looks at the config for interceptors.  If a list of interceptor instances are not found on the config then this
+    * method will iterate over the interceptor class names and reflectively instantiate interceptor instances.
+    * @param config
+    */
+   private void setInterceptors(Configuration config)
+   {
+      /* Checks to see if the config supplies a list of instantiated incoming interceptors.  If it does we not not
+       * instantiate new interceptors.  Instead we set those in the config incoming interceptor list.
+       */
+      if (config.getIncomingInterceptors() == null || config.getIncomingInterceptors().isEmpty())
+      {
+         for (String interceptorClass : config.getIncomingInterceptorClassNames())
+         {
+            try
+            {
+               incomingInterceptors.add((Interceptor) safeInitNewInstance(interceptorClass));
+            }
+            catch (Exception e)
+            {
+               HornetQServerLogger.LOGGER.errorCreatingRemotingInterceptor(e, interceptorClass);
+            }
+         }
+      }
+
+      /* Checks to see if the config supplies a list of instantiated outgoing interceptors.  If it does we not not
+       * instantiate new interceptors.  Instead we set those in the config outgoing interceptor list.
+       */
+      if (config.getIncomingInterceptors() == null || config.getIncomingInterceptors().isEmpty())
+      {
+         for (String interceptorClass : config.getOutgoingInterceptorClassNames())
+         {
+            try
+            {
+               outgoingInterceptors.add((Interceptor) safeInitNewInstance(interceptorClass));
+            }
+            catch (Exception e)
+            {
+               HornetQServerLogger.LOGGER.errorCreatingRemotingInterceptor(e, interceptorClass);
             }
          }
       }

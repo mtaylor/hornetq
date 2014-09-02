@@ -19,6 +19,7 @@ import java.util.Set;
 
 import org.hornetq.api.core.BroadcastGroupConfiguration;
 import org.hornetq.api.core.DiscoveryGroupConfiguration;
+import org.hornetq.api.core.Interceptor;
 import org.hornetq.api.core.SimpleString;
 import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.core.security.Role;
@@ -31,6 +32,7 @@ import org.hornetq.core.settings.impl.AddressSettings;
  * A Configuration is used to configure HornetQ servers.
  *
  * @author <a href="mailto:tim.fox@jboss.com">Tim Fox</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public interface Configuration extends Serializable
 {
@@ -264,6 +266,16 @@ public interface Configuration extends Serializable
    List<String> getOutgoingInterceptorClassNames();
 
    /**
+    * Get the list of interceptor instances used by this server for outgoing messages.
+    */
+   List<Interceptor> getOutgoingInterceptors();
+
+   /**
+    * Gets the list of incoming interceptor instances used by this service for incoming messages
+    */
+   List<Interceptor> getIncomingInterceptors();
+
+   /**
     * Sets the list of interceptors classes used by this server for incoming messages (i.e. those
     * being delivered to the server from clients). Invoking this method is the same as invoking
     * <code>setIncomingInterceptorClassNames(List)</code> <br />
@@ -293,6 +305,16 @@ public interface Configuration extends Serializable
     * Classes must implement {@link org.hornetq.api.core.Interceptor}.
     */
    void setOutgoingInterceptorClassNames(List<String> interceptors);
+
+   /**
+    * Sets the list of interceptor instances used by this server for outgoing messages.
+    */
+   void setOutgoingInterceptors(List<Interceptor> interceptors);
+
+   /**
+    * Sets the list of incoming interceptor instances used by this service for incoming messages
+    */
+   void setIncomingInterceptors(List<Interceptor> interceptors);
 
    /**
     * Returns the connection time to live. <br>

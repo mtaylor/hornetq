@@ -15,9 +15,13 @@ package org.hornetq.core.config;
 import java.io.Serializable;
 import java.util.Map;
 
+import org.hornetq.core.server.ConnectorServiceFactory;
+import org.hornetq.utils.ClassloadingUtil;
+
 /**
  * A ConnectorServiceConfiguration
  * @author <a href="tm.igarashi@gmail.com">Tomohisa Igarashi</a>
+ * @author <a href="mailto:mtaylor@redhat.com">Martyn Taylor</a>
  */
 public class ConnectorServiceConfiguration implements Serializable
 {
@@ -29,10 +33,22 @@ public class ConnectorServiceConfiguration implements Serializable
 
    private final  Map<String, Object> params;
 
+   private transient ConnectorServiceFactory connectorServiceFactory;
+
    public ConnectorServiceConfiguration(final String clazz, final Map<String, Object> params, final String name)
    {
       this.name = name;
       factoryClassName = clazz;
+      this.params = params;
+   }
+
+   public ConnectorServiceConfiguration(final ConnectorServiceFactory connectorServiceFactory,
+                                        final Map<String, Object> params,
+                                        final String name)
+   {
+      this.name = name;
+      this.connectorServiceFactory = connectorServiceFactory;
+      this.factoryClassName = connectorServiceFactory.getClass().getCanonicalName();
       this.params = params;
    }
 
@@ -78,5 +94,14 @@ public class ConnectorServiceConfiguration implements Serializable
       result = 31 * result + (getFactoryClassName() != null ? getFactoryClassName().hashCode() : 0);
       result = 31 * result + (getParams() != null ? getParams().hashCode() : 0);
       return result;
+   }
+
+   public ConnectorServiceFactory getConnectorServiceFactory()
+   {
+      if (connectorServiceFactory == null)
+      {
+         connectorServiceFactory = (ConnectorServiceFactory) ClassloadingUtil.newInstanceFromClassLoader(getFactoryClassName());
+      }
+      return connectorServiceFactory;
    }
 }
