@@ -1111,6 +1111,10 @@ public interface HornetQServerLogger extends BasicLogger
          format = Message.Format.MESSAGE_FORMAT)
    void activateSharedStoreSlaveFailed(@Cause Throwable e);
 
+   @LogMessage(level = Logger.Level.DEBUG)
+   @Message(id = 222190, value = "Retrying connection to node {0}", format = Message.Format.MESSAGE_FORMAT)
+   void retryingNodeConnection(String targetNodeID);
+
    @LogMessage(level = Logger.Level.ERROR)
    @Message(id = 224000, value = "Failure in initialisation", format = Message.Format.MESSAGE_FORMAT)
    void initializationError(@Cause Throwable e);

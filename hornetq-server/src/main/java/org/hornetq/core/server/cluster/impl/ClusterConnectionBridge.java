@@ -75,6 +75,8 @@ public class ClusterConnectionBridge extends BridgeImpl
 
    private final ServerLocatorInternal discoveryLocator;
 
+   private boolean nodeAvailable = true;
+
    public ClusterConnectionBridge(final ClusterConnection clusterConnection, final ClusterManager clusterManager,
                                   final ServerLocatorInternal targetLocator,
                                   final ServerLocatorInternal discoveryLocator,
@@ -155,9 +157,18 @@ public class ClusterConnectionBridge extends BridgeImpl
 
       if (factory == null)
       {
-         HornetQServerLogger.LOGGER.nodeNotAvailable(targetNodeID);
+         if (nodeAvailable)
+         {
+            HornetQServerLogger.LOGGER.nodeNotAvailable(targetNodeID);
+            nodeAvailable = false;
+         }
+         else
+         {
+            HornetQServerLogger.LOGGER.retryingNodeConnection(targetNodeID);
+         }
          return null;
       }
+      nodeAvailable = true;
       factory.setReconnectAttempts(0);
       factory.getConnection().addFailureListener(this);
       return factory;
